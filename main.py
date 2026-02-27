@@ -18,7 +18,6 @@ def main():
     
     for key in freq_map:
         print(key)
-    print(banner)
     cipher = input("Enter Cipher: ")
     entry_options = ["Perform Frequency Analysis", "Exit"]
     
