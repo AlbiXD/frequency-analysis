@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-from simple_term_menu import TerminalMenu
 import heapq
 # Layout CIPHER TEXT, DECRYPT TEXT
 
@@ -31,8 +30,14 @@ def init_freq_map():
 # Puts frequency of letters from cipher into freq_map
 def get_freq(cipher: str):
     for letter in cipher:
+        if ord(letter) >= 32 and ord(letter) <= 64:
+            continue
         freq_map[letter] += 1
-
+def display_commands():
+    print("D - print debug")
+    print("C - change mapping")
+    print("E - exit from loop")
+    print("? - display list of commandsc")
 # Setting freq_max_heap using values in freq_map
 def set_freq_max_heap():
     for letter, freq in freq_map.items():
@@ -49,36 +54,72 @@ def map_letters():
         letters_map[letter] = LETTERS_SORTED_BY_FREQUENCY[i]
         mapped_letters.add(LETTERS_SORTED_BY_FREQUENCY[i])
 
+def display_mapping():
+    total = len(letters_map)
+    new_line = 0
+    i = 1
+    print("-" * 40)
+    print(f"  | {'Cipher':<10} | {'Plain':<10} |")
+    print("-" * 40)
+    for key in letters_map:
+        print(f"{i} |{key:<10}  | {letters_map[key]:<10} |")
+        i+=1
+    print("-" * 40)
+def display_cipher_text(cipher: str):
+    print(cipher)
+    
+def change_mapping():
+    while(True):
+        display_mapping()
+        print("Which letter would you like to change?")
+        change = str(input("$ "))
+        print(f"Which letter would you like to replace {change} with?")
+        replace = str(input("$ "))
+        
+        letters_map[change] = replace
+
+        display_mapping()
+        print("Finish? (Y/N)")
+        prompt = input("$ ")
+        if prompt.lower == "Y":
+            break
+        return
+def display_debug(cipher: str):
+    print("\n")
+    print("Mapping")
+    display_mapping()
+    print("\n")
+    print("Cipher Text")
+    display_cipher_text(cipher)
+    print("\n")
+    print("Decoded Text")
+    
+    
 def main():
     init_freq_map()
-    
     entry_options = ["Perform Frequency Analysis", "Exit"]
-    
-    terminal_menu = TerminalMenu(entry_options, preview_size=0.75)
-    menu_entry_index = terminal_menu.show()
+    print("1)", entry_options[0])
+    print("2)", entry_options[1])
 
-    # Get user selection
-    selection = entry_options[menu_entry_index]
-    if selection == entry_options[0]:
+    x = input("$ ")
+        # Get user selection
+    if x == '1':
         cipher = input("Enter Cipher: ")
         get_freq(cipher)
         set_freq_max_heap()
         map_letters()
-
-        # TESTING
-        print("\nfreq_map")
-        for letter, freq in freq_map.items():
-            if freq > 0:
-                print(f"${letter}: ${freq}")
-        print()
-
-        print("letters_map")
-        print(letters_map)
-        print()
-
-        print("mapped_letters")
-        print(mapped_letters)
     else: sys.exit(0)
-
+    print("Type ? for a list of commands")
+    while True:
+        x = input("$ ")
+        match x:
+            case '?':
+                display_commands()
+            case 'C':
+                change_mapping()
+            case 'D':
+                display_debug(cipher)
+            case _:
+                print("Type ? for a list of commands")
 if __name__ == "__main__":
     main()
