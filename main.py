@@ -33,6 +33,18 @@ def get_freq(cipher: str):
         if ord(letter) >= 32 and ord(letter) <= 64:
             continue
         freq_map[letter] += 1
+
+#printing decoded message
+def plaintext(cipher: str):
+    pt = ""
+    for l in cipher:
+        if l in letters_map:
+            pt += letters_map[l]
+        else:
+            pt += l
+    return pt
+
+
 def display_commands():
     print("D - print debug")
     print("C - change mapping")
@@ -68,7 +80,7 @@ def display_mapping():
 def display_cipher_text(cipher: str):
     print(cipher)
     
-def change_mapping():
+def change_mapping(cipher: str):
     while(True):
         display_mapping()
         print("Which letter would you like to change?")
@@ -81,9 +93,10 @@ def change_mapping():
         display_mapping()
         print("Finish? (Y/N)")
         prompt = input("$ ")
-        if prompt.lower == "Y":
+        if prompt.lower() == "y":
             break
-        return
+    plaintext(cipher)
+    return
 def display_debug(cipher: str):
     print("\n")
     print("Mapping")
@@ -93,6 +106,7 @@ def display_debug(cipher: str):
     display_cipher_text(cipher)
     print("\n")
     print("Decoded Text")
+    print(plaintext(cipher))
     
     
 def main():
@@ -116,9 +130,11 @@ def main():
             case '?':
                 display_commands()
             case 'C':
-                change_mapping()
+                change_mapping(cipher)
             case 'D':
                 display_debug(cipher)
+            case 'E':
+                return
             case _:
                 print("Type ? for a list of commands")
 if __name__ == "__main__":
